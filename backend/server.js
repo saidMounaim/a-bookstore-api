@@ -3,6 +3,9 @@ import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from './config/db.js';
 
+//ROUTES
+import BookRoute from './routes/BookRoute.js';
+
 dotenv.config();
 
 connectDB();
@@ -16,6 +19,10 @@ app.use(express.json());
 app.get("/api/", (req, res) => {
   res.status(201).json({ success: true, message: "Welcome ;)" });
 });
+
+
+//BOOK
+app.use("/api/books", BookRoute);
 
 const PORT = process.env.PORT || 5000;
 
