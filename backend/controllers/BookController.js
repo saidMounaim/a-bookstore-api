@@ -10,3 +10,19 @@ export const getAllBooks = asyncHandler(async (req, res) => {
     res.status(201).json({ success: true, count: books.length, data: books });
 
 })
+
+// @DESC Get Single Book
+// @ROUTE /api/books/:id
+// @METHOD GET
+export const getSingleBook = asyncHandler(async (req, res) => {
+
+    const book = await Book.findById(req.params.id);
+
+    if(!book) {
+        res.status(404);
+        throw new Error("Book Not Found");
+    }
+
+    res.status(201).json({ success: true, data: book });
+
+})

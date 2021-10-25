@@ -3,6 +3,9 @@ import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from './config/db.js';
 
+import { notFound, errorHandler } from "./middlewares/ErrorMiddleware.js";
+
+
 //ROUTES
 import BookRoute from './routes/BookRoute.js';
 
@@ -23,6 +26,12 @@ app.get("/api/", (req, res) => {
 
 //BOOK
 app.use("/api/books", BookRoute);
+
+
+
+
+app.use(notFound);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
