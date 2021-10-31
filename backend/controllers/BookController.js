@@ -1,5 +1,8 @@
 import asyncHandler from "express-async-handler";
 import Book from "../models/Book.js";
+import path from "path";
+
+const __dirname = path.resolve(path.dirname(""));
 
 // @DESC Get All Books
 // @ROUTE /api/books
@@ -27,12 +30,37 @@ export const getSingleBook = asyncHandler(async (req, res) => {
 // @ROUTE /api/books
 // @METHOD POST
 export const createBook = asyncHandler(async (req, res) => {
-  const book = await Book.create({
-    title: req.body.title,
-    description: req.body.description,
-    cover: req.body.cover,
-    authors: req.body.authors,
-  });
+  if (!req.files) {
+    throw new Error("No files were uploaded.");
+  }
 
-  res.status(201).json({ success: true, data: book });
+  if (!req.files.cover.mimetype.startsWith("image")) {
+    res.status(401);
+    throw new Error("Please add image file");
+  }
+
+  if (!req.files.cover.size > process.env.FILE_UPLOAD_LIMIT) {
+    res.status(401);
+    throw new Error(
+      `Please add a image less than ${process.env.FILE_UPLOAD_LIMIT}`
+    );
+  }
+
+  let cover = req.files.cover;
+
+  cover.mv(`${process.env.FILE_UPLOAD_PATH}/${cover.name}`, async (err) => {
+    if (err) {
+      res.status(401);
+      throw new Error(err);
+    }
+
+    let book = await Book.create({
+      title: req.body.title,
+      description: req.body.description,
+      cover: cover.name,
+      authors: req.body.authors,
+    });
+
+    res.status(201).json({ success: true, data: book });
+  });
 });
