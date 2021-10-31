@@ -64,3 +64,30 @@ export const createBook = asyncHandler(async (req, res) => {
     res.status(201).json({ success: true, data: book });
   });
 });
+
+// @DESC Update Book By ID
+// @ROUTE /api/books/:id
+// @METHOD PUT
+export const updateBook = asyncHandler(async (req, res) => {
+  let book = await Book.findById(req.params.id);
+
+  if (!book) {
+    res.status(401);
+    throw new Error("Book not found");
+  }
+
+  book = await Book.findByIdAndUpdate(
+    req.params.id,
+    {
+      title: req.body.title,
+      description: req.body.description,
+      authors: req.body.authors,
+    },
+    {
+      runValidators: true,
+      new: true,
+    }
+  );
+
+  res.status(201).json({ success: true, data: book });
+});
