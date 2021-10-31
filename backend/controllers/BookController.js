@@ -1,8 +1,5 @@
 import asyncHandler from "express-async-handler";
 import Book from "../models/Book.js";
-import path from "path";
-
-const __dirname = path.resolve(path.dirname(""));
 
 // @DESC Get All Books
 // @ROUTE /api/books
@@ -90,4 +87,20 @@ export const updateBook = asyncHandler(async (req, res) => {
   );
 
   res.status(201).json({ success: true, data: book });
+});
+
+// @DESC Delete Book By ID
+// @ROUTE /api/books/:id
+// @METHOD DELETE
+export const deleteBook = asyncHandler(async (req, res) => {
+  let book = await Book.findById(req.params.id);
+
+  if (!book) {
+    res.status(401);
+    throw new Error("Book not found");
+  }
+
+  book = await Book.findByIdAndDelete(req.params.id);
+
+  res.status(201).json({ success: true, data: {} });
 });
