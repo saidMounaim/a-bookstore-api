@@ -104,3 +104,50 @@ export const deleteBook = asyncHandler(async (req, res) => {
 
   res.status(201).json({ success: true, data: {} });
 });
+
+// @DESC Update Cover Book
+// @ROUTE /api/books/:id/cover
+// @METHOD POST
+export const updateCoverBook = asyncHandler(async (req, res) => {
+  let book = await Book.findById(req.params.id);
+
+  if (!book) {
+    res.status(401);
+    throw new Error("Book not found");
+  }
+
+  if (!req.files) {
+    throw new Error("No files were uploaded.");
+  }
+
+  if (!req.files.cover.mimetype.startsWith("image")) {
+    res.status(401);
+    throw new Error("Please add image file");
+  }
+
+  if (!req.files.cover.size > process.env.FILE_UPLOAD_LIMIT) {
+    res.status(401);
+    throw new Error(
+      `Please add a image less than ${process.env.FILE_UPLOAD_LIMIT}`
+    );
+  }
+
+  let cover = req.files.cover;
+
+  cover.mv(`${process.env.FILE_UPLOAD_PATH}/${cover.name}`, async (err) => {
+    if (err) {
+      res.status(401);
+      throw new Error(err);
+    }
+
+    book = await Book.findByIdAndUpdate(
+      req.params.id,
+      {
+        cover: cover.name,
+      },
+      { new: true, runValidators: true }
+    );
+
+    res.status(201).json({ success: true, data: book });
+  });
+});
