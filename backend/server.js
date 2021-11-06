@@ -9,6 +9,7 @@ import { notFound, errorHandler } from "./middlewares/ErrorMiddleware.js";
 
 //ROUTES
 import BookRoute from "./routes/BookRoute.js";
+import CategoryRoute from "./routes/CategoryRoute.js";
 
 dotenv.config();
 
@@ -31,6 +32,9 @@ app.get("/api/", (req, res) => {
 
 //BOOK
 app.use("/api/books", BookRoute);
+
+//CATEGORY
+app.use("/api/categories", CategoryRoute);
 
 app.use(notFound);
 app.use(errorHandler);

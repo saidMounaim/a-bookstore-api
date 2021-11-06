@@ -17,6 +17,16 @@ const BookSchema = mongoose.Schema(
       required: true,
     },
 
+    category: [
+      {
+        name: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          ref: "Category",
+        },
+      },
+    ],
+
     authors: [
       {
         fullName: {
