@@ -5,7 +5,14 @@ import Book from "../models/Book.js";
 // @ROUTE /api/books
 // @METHOD GET
 export const getAllBooks = asyncHandler(async (req, res) => {
-  const books = await Book.find({});
+  let books;
+  if (req.query.title && req.query.title !== "") {
+    books = await Book.find({
+      title: { $regex: ".*" + req.query.title + ".*" },
+    });
+  } else {
+    books = await Book.find({});
+  }
   res.status(201).json({ success: true, count: books.length, data: books });
 });
 
