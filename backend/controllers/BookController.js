@@ -114,7 +114,7 @@ export const deleteBook = asyncHandler(async (req, res) => {
 
 // @DESC Update Cover Book
 // @ROUTE /api/books/:id/cover
-// @METHOD POST
+// @METHOD PUT
 export const updateCoverBook = asyncHandler(async (req, res) => {
   let book = await Book.findById(req.params.id);
 
