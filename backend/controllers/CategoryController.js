@@ -46,3 +46,19 @@ export const updateCategory = asyncHandler(async (req, res) => {
 
   res.status(201).json({ success: true, data: category });
 });
+
+// @DESC Delete Catagory
+// @ROUTE /api/categories/:id
+// @METHOD DELETE
+export const deleteCategory = asyncHandler(async (req, res) => {
+  let category = await Category.findById(req.params.id);
+
+  if (!category) {
+    res.status(401);
+    throw new Error("Category nor found");
+  }
+
+  category = await Category.findByIdAndDelete(req.params.id);
+
+  res.status(201).json({ success: true, data: {} });
+});
