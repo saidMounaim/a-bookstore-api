@@ -10,3 +10,14 @@ export const getAllCategories = asyncHandler(async (req, res) => {
     .status(201)
     .json({ success: true, count: categories.length, data: categories });
 });
+
+// @DESC Create New Category
+// @ROUTE /api/categories
+// @METHOD POST
+export const createCategory = asyncHandler(async (req, res) => {
+  const { name } = req.body;
+
+  const category = await Category.create({ name });
+
+  res.status(201).json({ success: true, data: category });
+});
