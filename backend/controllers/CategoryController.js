@@ -21,3 +21,28 @@ export const createCategory = asyncHandler(async (req, res) => {
 
   res.status(201).json({ success: true, data: category });
 });
+
+// @DESC Update Category
+// @ROUTE /api/categories/:id
+// @METHOD PUT
+export const updateCategory = asyncHandler(async (req, res) => {
+  let category = await Category.findById(req.params.id);
+
+  if (!category) {
+    res.status(401);
+    throw new Error("Category nor found");
+  }
+
+  category = await Category.findByIdAndUpdate(
+    req.params.id,
+    {
+      name: req.body.name,
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  res.status(201).json({ success: true, data: category });
+});
