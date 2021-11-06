@@ -9,3 +9,14 @@ export const getAllUsers = asyncHandler(async (req, res) => {
 
   res.status(201).json({ success: true, count: users.length, data: users });
 });
+
+// @DESC Craete New User
+// @ROUTE /api/users
+// @METHOD POST
+export const createUser = asyncHandler(async (req, res) => {
+  const { fullName, email, password } = req.body;
+
+  const user = await User.create({ fullName, email, password });
+
+  res.status(201).json({ success: true, data: user });
+});
