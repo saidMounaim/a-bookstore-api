@@ -11,6 +11,7 @@ import { notFound, errorHandler } from "./middlewares/ErrorMiddleware.js";
 import BookRoute from "./routes/BookRoute.js";
 import CategoryRoute from "./routes/CategoryRoute.js";
 import UserRoute from "./routes/UserRoute.js";
+import AuthRoute from "./routes/AuthRoute.js";
 
 dotenv.config();
 
@@ -39,6 +40,9 @@ app.use("/api/categories", CategoryRoute);
 
 //USER
 app.use("/api/users", UserRoute);
+
+//AUTH
+app.use("/api/auth", AuthRoute);
 
 app.use(notFound);
 app.use(errorHandler);
