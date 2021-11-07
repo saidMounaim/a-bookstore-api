@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 const UserSchema = mongoose.Schema({
   fullName: {
@@ -21,6 +22,24 @@ const UserSchema = mongoose.Schema({
     required: true,
     select: false,
   },
+
+  isAdmin: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+UserSchema.pre("save", function (next) {
+  if (!this.isModified("password")) {
+    next();
+  }
+
+  const salt = bcrypt.genSaltSync(10);
+  const hash = bcrypt.hashSync(this.password, salt);
+
+  this.password = hash;
+
+  next();
 });
 
 const User = mongoose.model("User", UserSchema);
