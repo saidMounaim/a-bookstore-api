@@ -20,3 +20,32 @@ export const createUser = asyncHandler(async (req, res) => {
 
   res.status(201).json({ success: true, data: user });
 });
+
+// @DESC Update User
+// @ROUTE /api/users/:id
+// @METHOD PUT
+export const updateUser = asyncHandler(async (req, res) => {
+  let user = await User.findById(req.params.id).select("+password");
+
+  if (!user) {
+    res.status(401);
+    throw new Error("User not found");
+  }
+
+  const { fullName, email, password } = req.body;
+
+  user = await User.findByIdAndUpdate(
+    req.params.id,
+    {
+      fullName,
+      email,
+      password,
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  res.status(201).json({ success: true, data: user });
+});
