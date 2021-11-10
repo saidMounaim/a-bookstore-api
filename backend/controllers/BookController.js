@@ -63,6 +63,7 @@ export const createBook = asyncHandler(async (req, res) => {
       description: req.body.description,
       cover: cover.name,
       authors: req.body.authors,
+      user: req.user._id,
     });
 
     res.status(201).json({ success: true, data: book });
@@ -78,6 +79,11 @@ export const updateBook = asyncHandler(async (req, res) => {
   if (!book) {
     res.status(401);
     throw new Error("Book not found");
+  }
+
+  if (req.user._id.toString() !== book.user.toString()) {
+    res.status(401);
+    throw new Error("Not Authorize to access this route");
   }
 
   book = await Book.findByIdAndUpdate(
@@ -105,6 +111,11 @@ export const deleteBook = asyncHandler(async (req, res) => {
   if (!book) {
     res.status(401);
     throw new Error("Book not found");
+  }
+
+  if (req.user._id.toString() !== book.user.toString()) {
+    res.status(401);
+    throw new Error("Not Authorize to access this route");
   }
 
   book = await Book.findByIdAndDelete(req.params.id);
@@ -137,6 +148,11 @@ export const updateCoverBook = asyncHandler(async (req, res) => {
     throw new Error(
       `Please add a image less than ${process.env.FILE_UPLOAD_LIMIT}`
     );
+  }
+
+  if (req.user._id.toString() !== book.user.toString()) {
+    res.status(401);
+    throw new Error("Not Authorize to access this route");
   }
 
   let cover = req.files.cover;
