@@ -5,10 +5,14 @@ import {
   updateCategory,
   deleteCategory,
 } from "../controllers/CategoryController.js";
+import { ProtectMiddleware } from "../middlewares/ProtectMiddleware.js";
 
 const router = express.Router();
 
-router.route("/").get(getAllCategories).post(createCategory);
-router.route("/:id").put(updateCategory).delete(deleteCategory);
+router.route("/").get(getAllCategories).post(ProtectMiddleware, createCategory);
+router
+  .route("/:id")
+  .put(ProtectMiddleware, updateCategory)
+  .delete(ProtectMiddleware, deleteCategory);
 
 export default router;

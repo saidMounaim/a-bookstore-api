@@ -17,7 +17,7 @@ export const getAllCategories = asyncHandler(async (req, res) => {
 export const createCategory = asyncHandler(async (req, res) => {
   const { name } = req.body;
 
-  const category = await Category.create({ name });
+  const category = await Category.create({ name, user: req.user._id });
 
   res.status(201).json({ success: true, data: category });
 });
@@ -31,6 +31,11 @@ export const updateCategory = asyncHandler(async (req, res) => {
   if (!category) {
     res.status(401);
     throw new Error("Category nor found");
+  }
+
+  if (req.user._id.toString() !== category.user.toString()) {
+    res.status(401);
+    throw new Error("Not Authorize to access this route");
   }
 
   category = await Category.findByIdAndUpdate(
@@ -56,6 +61,11 @@ export const deleteCategory = asyncHandler(async (req, res) => {
   if (!category) {
     res.status(401);
     throw new Error("Category nor found");
+  }
+
+  if (req.user._id.toString() !== category.user.toString()) {
+    res.status(401);
+    throw new Error("Not Authorize to access this route");
   }
 
   category = await Category.findByIdAndDelete(req.params.id);
