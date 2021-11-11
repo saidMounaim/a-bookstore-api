@@ -32,6 +32,11 @@ export const updateUser = asyncHandler(async (req, res) => {
     throw new Error("User not found");
   }
 
+  if (req.user._id.toString() !== user._id.toString()) {
+    res.status(401);
+    throw new Error("Not Authorize to access this route");
+  }
+
   const { fullName, email, password } = req.body;
 
   user = await User.findByIdAndUpdate(
@@ -59,6 +64,11 @@ export const deleteUser = asyncHandler(async (req, res) => {
   if (!user) {
     res.status(401);
     throw new Error("User not found");
+  }
+
+  if (req.user._id.toString() !== user._id.toString()) {
+    res.status(401);
+    throw new Error("Not Authorize to access this route");
   }
 
   user = await User.findByIdAndDelete(req.params.id);
