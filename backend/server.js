@@ -12,6 +12,7 @@ import BookRoute from "./routes/BookRoute.js";
 import CategoryRoute from "./routes/CategoryRoute.js";
 import UserRoute from "./routes/UserRoute.js";
 import AuthRoute from "./routes/AuthRoute.js";
+import OrderRoute from "./routes/OrderRoute.js";
 
 dotenv.config();
 
@@ -43,6 +44,9 @@ app.use("/api/users", UserRoute);
 
 //AUTH
 app.use("/api/auth", AuthRoute);
+
+//ORDER
+app.use("/api/orders", OrderRoute);
 
 app.use(notFound);
 app.use(errorHandler);
