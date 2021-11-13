@@ -64,3 +64,34 @@ export const addOrder = asyncHandler(async (req, res) => {
 
   res.status(201).json({ success: true, order });
 });
+
+// @DESC Update Order
+// @ROUTE /api/orders/:id
+// @METHOD PUT
+export const updateOrder = asyncHandler(async (req, res) => {
+  let order = await Order.findById(req.params.id);
+
+  if (!order) {
+    res.status(401);
+    throw new Error("Order not found");
+  }
+
+  if (req.user) {
+    if (!req.user.isAdmin) {
+      res.status(401);
+      throw new Error("Not Authorize to access this route");
+    }
+  }
+
+  order = await Order.findByIdAndUpdate(
+    req.params.id,
+    {
+      amount: req.body.amount,
+      adresse: req.body.adresse,
+      status: req.body.status,
+    },
+    { new: true, runValidators: true }
+  );
+
+  res.status(201).json({ success: true, data: order });
+});
