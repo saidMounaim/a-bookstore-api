@@ -18,6 +18,25 @@ export const getOrders = asyncHandler(async (req, res) => {
   res.status(201).json({ success: true, count: orders.length, data: orders });
 });
 
+// @DESC Get Single Order By Logged User
+// @ROUTE /api/orders/:id
+// @METHOD POST
+export const getSingleOrder = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+
+  if (!order) {
+    res.status(401);
+    throw new Error("Order not found");
+  }
+
+  if (req.user._id.toString() !== order.user.toString()) {
+    res.status(401);
+    throw new Error("Not Authorize to access this route");
+  }
+
+  res.status(201).json({ success: true, data: order });
+});
+
 // @DESC Add Order
 // @ROUTE /api/orders/book/:bookID
 // @METHOD POST
