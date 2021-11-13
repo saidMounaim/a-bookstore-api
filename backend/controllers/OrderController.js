@@ -95,3 +95,24 @@ export const updateOrder = asyncHandler(async (req, res) => {
 
   res.status(201).json({ success: true, data: order });
 });
+
+// @DESC Delete Order
+// @ROUTE /api/orders/:id
+// @METHOD DELETE
+export const deleteOrder = asyncHandler(async (req, res) => {
+  let order = await Order.findById(req.params.id);
+
+  if (!order) {
+    res.status(401);
+    throw new Error("Order not found");
+  }
+
+  if (req.user._id.toString() !== order.user.toString() || !req.user.isAdmin) {
+    res.status(401);
+    throw new Error("Not Authorize to access this route");
+  }
+
+  order = await Order.findByIdAndDelete(req.params.id);
+
+  res.status(201).json({ success: true, data: {} });
+});
